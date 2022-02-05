@@ -1,0 +1,29 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+enum UserRole {
+  USER
+  MODERATOR
+  SUPER_MODERATOR
+  ADMINISTRATOR
+}
+
+input TestInput {
+  id: String!
+  role: UserRole!
+}
+
+type TestType {
+  id: String!
+  role: UserRole!
+}
+
+type Query {
+  foo(in: TestInput!): TestType!
+}
+
+type Mutation {
+  foo(in: TestInput!): TestType!
+}
+
