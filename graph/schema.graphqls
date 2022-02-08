@@ -11,12 +11,12 @@ enum UserRole {
 
 input TestInput {
   id: String!
-  role: UserRole!
+  role: String!
 }
 
 type TestType {
   id: String!
-  role: UserRole!
+  role: String!
 }
 
 type Query {

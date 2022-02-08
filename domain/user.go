@@ -11,10 +11,10 @@ const (
 
 type TestInput struct {
 	ID   string
-	Role Role
+	Role float64
 }
 
 type TestType struct {
 	ID   string
-	Role Role
+	Role float64
 }

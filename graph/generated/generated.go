@@ -13,7 +13,6 @@ import (
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
 	"github.com/FanFani4/gqlgen-input-bug/domain"
-	"github.com/FanFani4/gqlgen-input-bug/graph/model"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
 )
@@ -67,11 +66,11 @@ type QueryResolver interface {
 	Foo(ctx context.Context, in domain.TestInput) (*domain.TestType, error)
 }
 type TestTypeResolver interface {
-	Role(ctx context.Context, obj *domain.TestType) (model.UserRole, error)
+	Role(ctx context.Context, obj *domain.TestType) (string, error)
 }
 
 type TestInputResolver interface {
-	Role(ctx context.Context, obj *domain.TestInput, data model.UserRole) error
+	Role(ctx context.Context, obj *domain.TestInput, data string) error
 }
 
 type executableSchema struct {
@@ -204,12 +203,12 @@ enum UserRole {
 
 input TestInput {
   id: String!
-  role: UserRole!
+  role: String!
 }
 
 type TestType {
   id: String!
-  role: UserRole!
+  role: String!
 }
 
 type Query {
@@ -270,6 +269,21 @@ func (ec *executionContext) field_Query_foo_args(ctx context.Context, rawArgs ma
 		}
 	}
 	args["in"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field___Field_args_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *bool
+	if tmp, ok := rawArgs["includeDeprecated"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("includeDeprecated"))
+		arg0, err = ec.unmarshalOBoolean2ᚖbool(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["includeDeprecated"] = arg0
 	return args, nil
 }
 
@@ -531,9 +545,9 @@ func (ec *executionContext) _TestType_role(ctx context.Context, field graphql.Co
 		}
 		return graphql.Null
 	}
-	res := resTmp.(model.UserRole)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNUserRole2githubᚗcomᚋFanFani4ᚋgqlgenᚑinputᚑbugᚋgraphᚋmodelᚐUserRole(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Directive_name(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {
@@ -925,6 +939,13 @@ func (ec *executionContext) ___Field_args(ctx context.Context, field graphql.Col
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field___Field_args_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Args, nil
@@ -1679,7 +1700,7 @@ func (ec *executionContext) unmarshalInputTestInput(ctx context.Context, obj int
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("role"))
-			data, err := ec.unmarshalNUserRole2githubᚗcomᚋFanFani4ᚋgqlgenᚑinputᚑbugᚋgraphᚋmodelᚐUserRole(ctx, v)
+			data, err := ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -2314,16 +2335,6 @@ func (ec *executionContext) marshalNTestType2ᚖgithubᚗcomᚋFanFani4ᚋgqlgen
 		return graphql.Null
 	}
 	return ec._TestType(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalNUserRole2githubᚗcomᚋFanFani4ᚋgqlgenᚑinputᚑbugᚋgraphᚋmodelᚐUserRole(ctx context.Context, v interface{}) (model.UserRole, error) {
-	var res model.UserRole
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNUserRole2githubᚗcomᚋFanFani4ᚋgqlgenᚑinputᚑbugᚋgraphᚋmodelᚐUserRole(ctx context.Context, sel ast.SelectionSet, v model.UserRole) graphql.Marshaler {
-	return v
 }
 
 func (ec *executionContext) marshalN__Directive2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐDirective(ctx context.Context, sel ast.SelectionSet, v introspection.Directive) graphql.Marshaler {
